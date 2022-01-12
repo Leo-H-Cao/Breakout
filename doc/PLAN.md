@@ -1,89 +1,94 @@
 # Breakout Plan
-### NAME
-
-
-#### Examples
-
-You need to put blank lines to write some text
-
-in separate paragraphs.
-
-
-Emphasis, aka italics, with *asterisks* or _underscores_.
-
-Strong emphasis, aka bold, with **asterisks** or __underscores__.
-
-Combined emphasis with **asterisks and _underscores_**.
-
-
-You can also make lists:
-* Bullets are made with asterisks
-1. You can order things with numbers.
-
-
-You can put links in like this: [Duke CompSci](https://www.cs.duke.edu)
-
+### Leo Cao
 
 
 ## Interesting Breakout Variants
 
- * Idea #1
+ * I found the "Centipong" variant to be very interesting because after the blocks are destroyed,
+they bounce back as additional balls, making it more chaotic and fast-paced than the original
 
- * Idea #2
+ * The "Bricks n Balls" variation was also interesting because it removed the paddle.
+Instead, the player just shoots a stream of balls and watches as the balls destroy blocks and eventually bounce
+bounce back, which I found very satisfying.
 
 
 ## Paddle Ideas
 
- * Idea #1
+ * Player is allowed to move the paddle vertically to strike ball sooner/later instead of only horizontal movement
 
- * Idea #2
+ * Warping from one side of the screen to the other when it reaches the edge
 
 
 ## Block Ideas
 
- * Idea #1
+ * Taking multiple hits before being destroyed
 
- * Idea #2
+ * Different shaped block such as a triangle so ball bounces differently
 
- * Idea #3
+ * dropping a power-up when destroyed
 
 
 ## Power-up Ideas
 
- * Idea #1
+ * wider paddle
 
- * Idea #2
+ * extra ball in play
 
- * Idea #3
+ * tiny ball (power-down)
 
 
 ## Cheat Key Ideas
 
- * Idea #1
+ * ball damage increases
 
- * Idea #2
+ * clears current level
 
- * Idea #3
+ * extra lives
 
- * Idea #4
+ * extra ball
 
 
 ## Level Descriptions
 
- * Idea #1
+* "pictures":
+  * level 1:
+  
+      1 1 1 1 1 1
+    
+      0 1 1 1 1 0
+        
+      0 0 1 1 0 0
+  
+  * level 2: 
 
- * Idea #2
+    2 3 1 1 3 2
 
- * Idea #3
+    2 3 1 1 3 2
+
+    4 4 4 4 4 4
+
+  * level 3:
+
+    2 2 5 5 2 2
+
+    1 5 5 5 5 1
+
+    3 3 3 3 3 3
+
+* Idea #1, certain power up blocks only appear on certain levels
+
+* Idea #2, introduces triangle blocks
+
+* Idea #3, paddle gets smaller as you lose lives
 
 
 ## Class Ideas
 
- * Idea #1
+ * ball (method: setSpeed)
 
- * Idea #2
+ * paddle (method: changeWidth)
 
- * Idea #3
+ * block (method: makeInvisible)
 
- * Idea #4
+ * collisions (method: objectsIntersecting)
 
