@@ -25,11 +25,30 @@ public class Paddle{
     }
 
     public void setX(double x){
-        myRectangle.setX(x);
+        //checks is paddle is moving off screen
+        if(x>=0 && x <= Game.SIZE-PADDLE_WIDTH){
+            myRectangle.setX(x);
+        }
     }
 
     public void setY(double y){
         myRectangle.setY(y);
+    }
+
+    public double getMaxX(){
+        return myRectangle.getBoundsInParent().getMaxX();
+    }
+
+    public double getMaxY(){
+        return myRectangle.getBoundsInParent().getMaxY();
+    }
+
+    public double getMinX(){
+        return myRectangle.getBoundsInParent().getMinX();
+    }
+
+    public double getMinY(){
+        return myRectangle.getBoundsInParent().getMinY();
     }
 
     public Rectangle getRectangle(){
@@ -39,4 +58,5 @@ public class Paddle{
     public void setColor(Paint color){
         myRectangle.setFill(color);
     }
+
 }

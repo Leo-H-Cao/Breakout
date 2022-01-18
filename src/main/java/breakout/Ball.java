@@ -10,8 +10,8 @@ public class Ball{
     public static final String BALL_IMAGE = RESOURCE_PATH + "basketball.png";
 
     private ImageView myImage;
-    private int myDirX;
-    private int myDirY;
+    private int myVelocityX;
+    private int myVelocityY;
 
     public Ball(double x, double y, int size){
         Image image = new Image(getClass().getResourceAsStream(BALL_IMAGE));
@@ -20,8 +20,8 @@ public class Ball{
         myImage.setFitHeight(size);
         myImage.setX(x);
         myImage.setY(y);
-        myDirX = 3;
-        myDirY = 1;
+        myVelocityX = Physics.getRandomVelocity();
+        myVelocityY = -3;
     }
 
     public void setX(double x){
@@ -36,19 +36,20 @@ public class Ball{
         return myImage.getFitWidth();
     }
 
-    public int getDirX(){
-        return myDirX;
+    public int getVelocityX(){
+        return myVelocityX;
     }
 
-    public void setDirX(int dir){
-        myDirX= dir;
-    }
-    public int getDirY(){
-        return myDirY;
+    public void setVelocityX(int dir){
+        myVelocityX= dir;
     }
 
-    public void setDirY(int dir){
-        myDirY= dir;
+    public int getVelocityY(){
+        return myVelocityY;
+    }
+
+    public void setVelocityY(int vel){
+        myVelocityY= vel;
     }
 
     public double getX(){
@@ -75,12 +76,12 @@ public class Ball{
         return myImage.getY() + myImage.getFitWidth();
     }
 
-    public void wallBounceX(){
-        myDirX = -myDirX;
+    public void bounceX(){
+        myVelocityX = -myVelocityX;
     }
 
-    public void wallBounceY(){
-        myDirY = -myDirY;
+    public void bounceY(){
+        myVelocityY = -myVelocityY;
     }
 
     public Bounds getBounds(){
@@ -90,5 +91,4 @@ public class Ball{
     public ImageView getImage(){
         return myImage;
     }
-
 }

@@ -19,11 +19,7 @@ import javafx.util.Duration;
  */
 public class Main extends Application {
     // useful names for constant values used
-    public static final String TITLE = "Breakout";
-    public static final int SIZE = 400;
-    public static final Paint BACKGROUND = Color.AZURE;
-    public static final int FRAMES_PER_SECOND = 60;
-    public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+
 
     private Game myGame;
 
@@ -32,19 +28,6 @@ public class Main extends Application {
      */
     @Override
     public void start (Stage stage) {
-        // create game to be played
-        myGame = new Game();
-
-        // attach scene to the stage and display it
-        Scene scene = myGame.setupGame(SIZE, SIZE, BACKGROUND);
-        stage.setScene(scene);
-        stage.setTitle(TITLE);
-        stage.show();
-
-        // attach "game loop" to timeline to play it (basically just calling step() method repeatedly forever)
-        Timeline animation = new Timeline();
-        animation.setCycleCount(Timeline.INDEFINITE);
-        animation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> myGame.step(SECOND_DELAY)));
-        animation.play();
+        Game.startGame(stage);
     }
 }
