@@ -55,8 +55,12 @@ public class Paddle{
         return myRectangle;
     }
 
-    public void setColor(Paint color){
-        myRectangle.setFill(color);
+    public void widePaddle(){
+        myRectangle.setWidth(PADDLE_WIDTH*1.2);
+    }
+
+    public void resetPaddleWidth(){
+        myRectangle.setWidth(PADDLE_WIDTH);
     }
 
 }

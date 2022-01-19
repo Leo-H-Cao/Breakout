@@ -15,8 +15,10 @@ import javafx.util.Duration;
 
 public class Game {
     public static final int BALL_SIZE = 30;
+    public static final int BIG_BALL_SIZE = 40;
+    public static final int SMALL_BALL_SIZE = 20;
     public static final int BOUNCER_SPEED = 50;
-    public static final int PADDLE_SPEED = 20;
+    public static final int DEFAULT_PADDLE_SPEED = 24;
     public static final int SCREEN_SIZE = 400;
     public static final String TITLE = "Breakout";
     public static final int FRAMES_PER_SECOND = 60;
@@ -35,6 +37,7 @@ public class Game {
     private int numBlocks;
     private int blankBlocks;
     private boolean ballLaunched;
+    private int paddleSpeed;
 
     public void startGame(Stage stage){
         root = new Group();
@@ -45,6 +48,7 @@ public class Game {
         blocks = new ArrayList<>();
         myLevelController = new LevelController(root, SCREEN_SIZE, SCREEN_SIZE, myPaddle, myBall, blocks);
         setupBlocks(myLevelController.getLevel());
+        paddleSpeed = DEFAULT_PADDLE_SPEED;
 
         scene = myLevelController.getScene();
         Button start_btn = new Button("Start");
@@ -75,6 +79,8 @@ public class Game {
         if(myBall.getMinY() > scene.getHeight()){
             myLevelController.decLives();
             gamePhysics.resetBallAndPaddle();
+            ballLaunched = false;
+            paddleSpeed = DEFAULT_PADDLE_SPEED;
 
             if(myLevelController.getLives() == 0){
                 myLevelController.loseScene();
@@ -93,6 +99,15 @@ public class Game {
                     block.removeBlock();
                     root.getChildren().remove(block.getRectangle());
                     numBlocks--;
+                    if(block.getType() == 4){
+                        myBall.setSize(SMALL_BALL_SIZE);
+                    }
+                    else if(block.getType() == 5){
+                        myPaddle.widePaddle();
+                    }
+                    else if(block.getType() == 6){
+                        paddleSpeed *= 1.3;
+                    }
                 }
                 else{
                     block.updateBlockColor();
@@ -118,25 +133,40 @@ public class Game {
 
     private void handleKeyInput (KeyCode code) {
         if (code == KeyCode.RIGHT && ballLaunched) {
-            myPaddle.setX(myPaddle.getX() + PADDLE_SPEED);
+            myPaddle.setX(myPaddle.getX() + paddleSpeed);
         }
         else if (code == KeyCode.LEFT && ballLaunched) {
-            myPaddle.setX(myPaddle.getX() - PADDLE_SPEED);
+            myPaddle.setX(myPaddle.getX() - paddleSpeed);
         }
+
+        //initially launches ball but also cheat key to bounce ball without hitting paddle
         else if(code == KeyCode.SPACE){
             myBall.setVelocityY(INITIAL_BALL_VELOCITY);
             myBall.setVelocityX(Physics.getRandomVelocity());
             ballLaunched = true;
         }
+
+        //cheat key clears level
         else if(code == KeyCode.C){
             myLevelController.clearBlocks();
             numBlocks = 0;
+            blankBlocks = 0;
         }
-        else if (code == KeyCode.DOWN) {
-            myPaddle.setY(myPaddle.getY() + PADDLE_SPEED);
+
+        //cheat code to make larger ball
+        else if(code == KeyCode.B){
+            myBall.setSize(BIG_BALL_SIZE);
         }
-        else if (code == KeyCode.UP) {
-            myPaddle.setY(myPaddle.getY() - PADDLE_SPEED);
+
+        //cheat code to increase number of lives
+        else if(code == KeyCode.L){
+            myLevelController.incLives();
+        }
+        else if (code == KeyCode.DOWN && ballLaunched) {
+            myPaddle.setY(myPaddle.getY() + paddleSpeed);
+        }
+        else if (code == KeyCode.UP && ballLaunched) {
+            myPaddle.setY(myPaddle.getY() - paddleSpeed);
         }
     }
 
@@ -186,6 +216,9 @@ public class Game {
             myLevelController.gameScene();
             gamePhysics.resetBallAndPaddle();
             ballLaunched = false;
+        }
+        else{
+            myLevelController.winScene();
         }
     }
 }

@@ -73,8 +73,8 @@ public class LevelController {
 
     public void clearBlocks(){
       for(Block block : blocks){
-          block.removeBlock();
           myRoot.getChildren().remove(block.getRectangle());
+          block.removeBlock();
       }
     }
 
@@ -92,16 +92,29 @@ public class LevelController {
       livesText.setText("Lives: " + lives);
     }
 
+    public void incLives(){
+      lives++;
+      livesText.setText("Lives: " + lives);
+    }
+
     public int getLives(){
       return lives;
     }
 
     public void loseScene(){
       myRoot.getChildren().clear();
-      Text lostText = new Text(Game.SCREEN_SIZE*(0.25), Game.SCREEN_SIZE*(0.25), "Game Over");
+      Text lostText = new Text(Game.SCREEN_SIZE*(0.23), Game.SCREEN_SIZE*(0.25), "Game Over");
       Font font = new Font(TITLE_FONT_SIZE);
       lostText.setFont(font);
       myRoot.getChildren().add(lostText);
+    }
+
+    public void winScene(){
+      myRoot.getChildren().clear();
+      Text winText = new Text(Game.SCREEN_SIZE*(0.25), Game.SCREEN_SIZE*(0.25), "You Win!");
+      Font font = new Font(TITLE_FONT_SIZE);
+      winText.setFont(font);
+      myRoot.getChildren().add(winText);
     }
 
 }

@@ -75,6 +75,8 @@ public class Physics {
     paddle.setY(Game.SCREEN_SIZE*(0.75) + Game.BALL_SIZE);
     ball.setVelocityY(0);
     ball.setVelocityX(0);
+    paddle.resetPaddleWidth();
+    ball.setSize(Game.BALL_SIZE);
   }
 
 }

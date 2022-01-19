@@ -1,19 +1,28 @@
 package breakout;
 
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 public class Block {
     public static final int BLOCK_SIZE = 40;
+    public static final String BALL_BLOCK_IMAGE = "/bigball.png";
+    public static final String WIDE_PADDLE_IMG = "/widepaddle.png";
+    public static final String PADDLE_SPEED_IMG = "/paddlespeed.png";
+
 
     private Rectangle myRectangle;
     private Paint myColor;
     private int health;
+    private int myType;
 
     public Block(double x, double y, int type){
         myRectangle = new Rectangle(x, y, BLOCK_SIZE, BLOCK_SIZE);
-        health = type;
+        myType = type;
+        Image blockImg = new Image(BALL_BLOCK_IMAGE);;
+
         if(type == 1){
             myColor = Color.BLUE;
         }
@@ -23,10 +32,25 @@ public class Block {
         else if(type == 3){
             myColor = Color.RED;
         }
+        else if(type == 5){
+            blockImg = new Image(WIDE_PADDLE_IMG);
+        }
+        else if(type == 6){
+            blockImg = new Image(PADDLE_SPEED_IMG);
+        }
         else{
             this.removeBlock();
         }
-        myRectangle.setFill(myColor);
+
+        if(type < 4){
+            health = type;
+            myRectangle.setFill(myColor);
+        }
+        else{
+            health = 1;
+            myRectangle.setFill(new ImagePattern(blockImg));
+        }
+
     }
 
     public double getX(){
@@ -63,6 +87,10 @@ public class Block {
 
     public int getBlockHealth(){
         return health;
+    }
+
+    public int getType(){
+        return myType;
     }
 
     public void decHealth(){

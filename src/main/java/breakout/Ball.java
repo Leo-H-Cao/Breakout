@@ -24,6 +24,11 @@ public class Ball{
         myVelocityY = 0;
     }
 
+    public void setSize(int size){
+        myImage.setFitWidth(size);
+        myImage.setFitHeight(size);
+    }
+
     public void setX(double x){
         myImage.setX(x);
     }
