@@ -1,44 +1,51 @@
 package breakout;
 
+import java.util.ArrayList;
+import java.util.Scanner;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
 public class Game {
-    public static final int BALL_SIZE = 40;
+    public static final int BALL_SIZE = 30;
     public static final int BOUNCER_SPEED = 50;
     public static final int PADDLE_SPEED = 20;
-    public static final Paint HIGHLIGHT = Color.OLIVEDRAB;
-    public static final Paint BLOCK_COLOR = Color.GREENYELLOW;
-    public static final int SIZE = 400;
+    public static final int SCREEN_SIZE = 400;
     public static final String TITLE = "Breakout";
     public static final int FRAMES_PER_SECOND = 60;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     public static final int INITIAL_BALL_VELOCITY = -3;
+    public static final int BLOCK_GAP = 10;
 
     private Ball myBall;
     private Scene scene;
     private Paddle myPaddle;
-    private Block myBlock;
     private Physics gamePhysics;
     private LevelController myLevelController;
+    private Group root;
+    private ArrayList<Block> blocks;
+    private ArrayList<Integer> blocksList;
+    private int numBlocks;
+    private int blankBlocks;
+    private boolean ballLaunched;
 
     public void startGame(Stage stage){
-        Group root = new Group();
-        myBall = new Ball(SIZE/2, SIZE*(0.75), BALL_SIZE);
-        myPaddle = new Paddle(SIZE/2, SIZE*(0.75) + BALL_SIZE);
-        myBlock = new Block(0, 0, BLOCK_COLOR);
-        gamePhysics = new Physics(myBall, myPaddle, myBlock);
-        myLevelController = new LevelController(root, SIZE, SIZE, myPaddle, myBall, myBlock);
+        root = new Group();
+        myBall = new Ball(SCREEN_SIZE*(0.5), SCREEN_SIZE*(0.75), BALL_SIZE);
+        myPaddle = new Paddle(SCREEN_SIZE*(0.47), SCREEN_SIZE*(0.75) + BALL_SIZE);
+        gamePhysics = new Physics(myBall, myPaddle);
+        blocksList = new ArrayList<>();
+        blocks = new ArrayList<>();
+        myLevelController = new LevelController(root, SCREEN_SIZE, SCREEN_SIZE, myPaddle, myBall, blocks);
+        setupBlocks(myLevelController.getLevel());
+
         scene = myLevelController.getScene();
         Button start_btn = new Button("Start");
         myLevelController.startGameScene(start_btn);
@@ -46,6 +53,7 @@ public class Game {
         stage.setScene(scene);
         stage.setTitle(TITLE);
         stage.show();
+
 
         // attach "game loop" to timeline to play it (basically just calling step() method repeatedly forever)
         Timeline animation = new Timeline();
@@ -60,23 +68,44 @@ public class Game {
             myBall.bounceX();
         }
 
-        if (myBall.getMaxY() > scene.getHeight() || myBall.getMinY() < 0) {
+        if (myBall.getMinY() < 0) {
             myBall.bounceY();
+        }
+
+        if(myBall.getMinY() > scene.getHeight()){
+            myLevelController.decLives();
+            gamePhysics.resetBallAndPaddle();
+
+            if(myLevelController.getLives() == 0){
+                myLevelController.loseScene();
+            }
         }
 
         myBall.setX(myBall.getX() + (BOUNCER_SPEED * elapsedTime) * myBall.getVelocityX());
         myBall.setY(myBall.getY() + (BOUNCER_SPEED * elapsedTime) * myBall.getVelocityY());
 
         // check for collisions
-        if (isIntersecting(myBall, myBlock.getRectangle())) {
-            gamePhysics.ballAndBlockBounce();
-            myBlock.setColor(HIGHLIGHT);
+        for(Block block: blocks){
+            if (isIntersecting(myBall, block.getRectangle())) {
+                gamePhysics.ballAndBlockBounce(block);
+                block.decHealth();
+                if(block.getBlockHealth() == 0){
+                    block.removeBlock();
+                    root.getChildren().remove(block.getRectangle());
+                    numBlocks--;
+                }
+                else{
+                    block.updateBlockColor();
+                }
+            }
         }
-        else {
-            myBlock.setColor(BLOCK_COLOR);
-        }
+
         if (isIntersecting(myBall, myPaddle.getRectangle())) {
             gamePhysics.ballAndPaddleBounce();
+        }
+
+        if(numBlocks == 0){
+            nextLevel();
         }
     }
 
@@ -88,25 +117,75 @@ public class Game {
     }
 
     private void handleKeyInput (KeyCode code) {
-        if (code == KeyCode.RIGHT) {
+        if (code == KeyCode.RIGHT && ballLaunched) {
             myPaddle.setX(myPaddle.getX() + PADDLE_SPEED);
         }
-        else if (code == KeyCode.LEFT) {
+        else if (code == KeyCode.LEFT && ballLaunched) {
             myPaddle.setX(myPaddle.getX() - PADDLE_SPEED);
         }
         else if(code == KeyCode.SPACE){
             myBall.setVelocityY(INITIAL_BALL_VELOCITY);
             myBall.setVelocityX(Physics.getRandomVelocity());
+            ballLaunched = true;
         }
-//        else if (code == KeyCode.DOWN) {
-//            myPaddle.setY(myPaddle.getY() + PADDLE_SPEED);
-//        }
-//        else if (code == KeyCode.UP) {
-//            myPaddle.setY(myPaddle.getY() - PADDLE_SPEED);
-//        }
+        else if(code == KeyCode.C){
+            myLevelController.clearBlocks();
+            numBlocks = 0;
+        }
+        else if (code == KeyCode.DOWN) {
+            myPaddle.setY(myPaddle.getY() + PADDLE_SPEED);
+        }
+        else if (code == KeyCode.UP) {
+            myPaddle.setY(myPaddle.getY() - PADDLE_SPEED);
+        }
     }
 
     private boolean isIntersecting (Ball a, Rectangle b) {
         return b.getBoundsInParent().intersects(a.getBounds());
+    }
+
+    private void setupBlocks(int level){
+        int xPos = 0;
+        int yPos = 0;
+        String filePath = "level"+level+".txt";
+        readFile(filePath);
+        for(Integer blockType : blocksList){
+            Block block = new Block(xPos, yPos, blockType);
+            blocks.add(block);
+            if(blockType != 0){
+                numBlocks++;
+            }
+            else{
+                blankBlocks++;
+            }
+            if((numBlocks+blankBlocks) % 8 == 0){
+                xPos = 0;
+                yPos += (Block.BLOCK_SIZE + BLOCK_GAP);
+            }
+            else{
+                xPos += (Block.BLOCK_SIZE + BLOCK_GAP);
+            }
+        }
+    }
+
+    private void readFile(String filePath) {
+        Scanner scanner = new Scanner(getClass().getClassLoader().getResourceAsStream(filePath));
+        while (scanner.hasNextInt()) {
+            blocksList.add(scanner.nextInt());
+        }
+        scanner.close();
+    }
+
+    public void nextLevel(){
+        blocks.clear();
+        blocksList.clear();
+        myLevelController.incLevel();
+        int level = myLevelController.getLevel();
+        if(level <= 3){
+            setupBlocks(level);
+            myLevelController.gameScene();
+            gamePhysics.resetBallAndPaddle();
+            ballLaunched = false;
+        }
     }
 }

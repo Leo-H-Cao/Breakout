@@ -26,7 +26,7 @@ public class Paddle{
 
     public void setX(double x){
         //checks is paddle is moving off screen
-        if(x>=0 && x <= Game.SIZE-PADDLE_WIDTH){
+        if(x>=0 && x <= Game.SCREEN_SIZE-PADDLE_WIDTH){
             myRectangle.setX(x);
         }
     }

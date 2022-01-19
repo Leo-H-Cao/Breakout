@@ -6,12 +6,10 @@ public class Physics {
 
   private Ball ball;
   private Paddle paddle;
-  private Block block;
 
-  public Physics(Ball gameBall, Paddle gamePaddle, Block gameBlock){
+  public Physics(Ball gameBall, Paddle gamePaddle){
     ball = gameBall;
     paddle = gamePaddle;
-    block = gameBlock;
   }
   public void ballAndPaddleBounce(){
     double minXPad = paddle.getMinX();
@@ -29,16 +27,16 @@ public class Physics {
       ball.bounceY();
 
       //if coming from left/right and hits on near same sided edge of paddle, bounces back in same left/right direction
-      if (ball.getVelocityX() > 0 && (minXPad + Paddle.PADDLE_WIDTH / 2) > maxXBall) {
+      if (ball.getVelocityX() > 0 && (minXPad + Paddle.PADDLE_WIDTH *(0.5)) > maxXBall) {
         ball.bounceX();
       }
-      if (ball.getVelocityX() < 0 && (minXPad + Paddle.PADDLE_WIDTH / 2) < minXBall) {
+      if (ball.getVelocityX() < 0 && (minXPad + Paddle.PADDLE_WIDTH *(0.5)) < minXBall) {
         ball.bounceX();
       }
     }
   }
 
-  public void ballAndBlockBounce(){
+  public void ballAndBlockBounce(Block block){
     double minXBlock = block.getMinX();
     double maxXBlock = block.getMaxX();
     double minYBlock = block.getMinY();
@@ -68,6 +66,15 @@ public class Physics {
       randomInt = randomInt * -1;
     }
     return randomInt;
+  }
+
+  public void resetBallAndPaddle(){
+    ball.setX(Game.SCREEN_SIZE*(0.5));
+    ball.setY(Game.SCREEN_SIZE*(0.75));
+    paddle.setX(Game.SCREEN_SIZE*(0.47));
+    paddle.setY(Game.SCREEN_SIZE*(0.75) + Game.BALL_SIZE);
+    ball.setVelocityY(0);
+    ball.setVelocityX(0);
   }
 
 }
