@@ -21,7 +21,7 @@ public class Block {
     public Block(double x, double y, int type){
         myRectangle = new Rectangle(x, y, BLOCK_SIZE, BLOCK_SIZE);
         myType = type;
-        Image blockImg = new Image(BALL_BLOCK_IMAGE);;
+        Image blockImg;
 
         if(type == 1){
             myColor = Color.BLUE;
@@ -32,11 +32,17 @@ public class Block {
         else if(type == 3){
             myColor = Color.RED;
         }
+        else if(type == 4){
+            blockImg = new Image(BALL_BLOCK_IMAGE);
+            myRectangle.setFill(new ImagePattern(blockImg));
+        }
         else if(type == 5){
             blockImg = new Image(WIDE_PADDLE_IMG);
+            myRectangle.setFill(new ImagePattern(blockImg));
         }
         else if(type == 6){
             blockImg = new Image(PADDLE_SPEED_IMG);
+            myRectangle.setFill(new ImagePattern(blockImg));
         }
         else{
             this.removeBlock();
@@ -48,7 +54,6 @@ public class Block {
         }
         else{
             health = 1;
-            myRectangle.setFill(new ImagePattern(blockImg));
         }
 
     }
