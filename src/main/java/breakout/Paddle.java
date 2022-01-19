@@ -6,7 +6,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Paddle{
     public static final Paint PADDLE_COLOR = Color.PLUM;
-    public static final int PADDLE_WIDTH = 50;
+    public static final int PADDLE_WIDTH = 60;
     public static final int PADDLE_HEIGHT = 15;
 
     private Rectangle myRectangle;

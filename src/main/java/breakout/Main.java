@@ -28,6 +28,7 @@ public class Main extends Application {
      */
     @Override
     public void start (Stage stage) {
-        Game.startGame(stage);
+        myGame = new Game();
+        myGame.startGame(stage);
     }
 }

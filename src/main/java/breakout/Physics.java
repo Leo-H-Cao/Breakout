@@ -6,10 +6,12 @@ public class Physics {
 
   private Ball ball;
   private Paddle paddle;
+  private Block block;
 
-  public Physics(Ball gameBall, Paddle gamePaddle){
+  public Physics(Ball gameBall, Paddle gamePaddle, Block gameBlock){
     ball = gameBall;
     paddle = gamePaddle;
+    block = gameBlock;
   }
   public void ballAndPaddleBounce(){
     double minXPad = paddle.getMinX();
@@ -36,9 +38,36 @@ public class Physics {
     }
   }
 
+  public void ballAndBlockBounce(){
+    double minXBlock = block.getMinX();
+    double maxXBlock = block.getMaxX();
+    double minYBlock = block.getMinY();
+    double maxYBlock = block.getMaxY();
+    double minXBall = ball.getMinX();
+    double maxXBall = ball.getMaxX();
+    double minYBall = ball.getMinY();
+    double maxYBall = ball.getMaxY();
+
+    //check if ball collides on top or bottom edge of block
+    boolean ballHitsXDirection = ((minXBall >= minXBlock && minXBall <= maxXBlock) || (maxXBall >= minXBlock) && (maxXBall <= maxXBlock));
+    boolean ballHitsYDirection = (maxYBall >= minYBlock && maxYBall <= maxYBlock) || (minYBall >= minYBlock && minYBall <= maxYBlock);
+    if((ballHitsXDirection && ball.getVelocityY() > 0 && minYBall <= minYBlock && maxYBall >= minYBlock) ||
+        (ballHitsXDirection && ball.getVelocityY() < 0 && minYBall <= maxYBlock && maxYBall >= maxYBlock)){
+      ball.bounceY();
+    }
+    //check if ball hits left or right edge
+    else if((ball.getVelocityX() > 0 && maxXBall >= minXBlock && minXBall <= minXBlock && ballHitsYDirection)
+        || (ball.getVelocityX() < 0 && minXBall <= maxXBlock && maxXBall >= maxXBlock && ballHitsYDirection)){
+      ball.bounceX();
+    }
+  }
+
   public static int getRandomVelocity(){
-    int random_int = (int)Math.floor(Math.random()*(MAX_BALL_SPEED-MIN_BALL_SPEED+1)+MIN_BALL_SPEED);
-    return random_int;
+    int randomInt = (int)Math.floor(Math.random()*(MAX_BALL_SPEED-MIN_BALL_SPEED+1)+MIN_BALL_SPEED);
+    if(Math.random() < 0.5){
+      randomInt = randomInt * -1;
+    }
+    return randomInt;
   }
 
 }

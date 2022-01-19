@@ -24,6 +24,22 @@ public class Block {
         return myRectangle.getY();
     }
 
+    public double getMaxX(){
+        return myRectangle.getBoundsInParent().getMaxX();
+    }
+
+    public double getMaxY(){
+        return myRectangle.getBoundsInParent().getMaxY();
+    }
+
+    public double getMinX(){
+        return myRectangle.getBoundsInParent().getMinX();
+    }
+
+    public double getMinY(){
+        return myRectangle.getBoundsInParent().getMinY();
+    }
+
     public Rectangle getRectangle(){
         return myRectangle;
     }

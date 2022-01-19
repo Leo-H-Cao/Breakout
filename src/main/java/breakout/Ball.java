@@ -20,8 +20,8 @@ public class Ball{
         myImage.setFitHeight(size);
         myImage.setX(x);
         myImage.setY(y);
-        myVelocityX = Physics.getRandomVelocity();
-        myVelocityY = -3;
+        myVelocityX = 0;
+        myVelocityY = 0;
     }
 
     public void setX(double x){
