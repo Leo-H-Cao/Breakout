@@ -1,10 +1,6 @@
 # breakout
 ## Leo Cao
 
-
-DO NO FORK THIS REPOSITORY, clone it directly to your computer.
-
-
 This project implements the game of Breakout.
 
 ### Timeline
